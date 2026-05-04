@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm | Công ty HT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* --- NỀN TẢNG & BIẾN MÀU --- */
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #ff3d3d;
+            --text-main: #1e293b;
+            --bg-body: #f8fafc;
+        }
+
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+        body{background: var(--bg-body); color: var(--text-main)}
+        a{text-decoration:none;color:inherit}
+
+        /* --- TOPBAR --- */
+        .topbar{
+            background: linear-gradient(90deg, #1e293b, #334155);
+            color:#fff; padding:8px 8%;
+            display:flex; justify-content:space-between; font-size: 13px;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header{
+            background:#fff; padding:15px 8%;
+            display:flex; align-items:center; justify-content:space-between;
+            box-shadow:0 2px 15px rgba(0,0,0,.05);
+            position:sticky; top:0; z-index:99;
+        }
+
+        .logo{display:flex; align-items:center; gap:12px}
+        .logo img{width:50px; border-radius:8px}
+        .logo b{font-size: 20px; letter-spacing: 1px; color: var(--primary-color)}
+
+        .search{flex:1; max-width:500px; margin:0 40px; display:flex; position: relative;}
+        .search input{
+            flex:1; padding:10px 20px; border:1px solid #e2e8f0; 
+            border-radius:25px; outline: none; background: #f1f5f9;
+        }
+        .search button{
+            position: absolute; right: 5px; top: 5px;
+            padding:6px 15px; background: var(--primary-color); 
+            color:#fff; border:none; border-radius:20px; cursor: pointer;
+        }
+
+        header .icons i{margin-left:20px; font-size:20px; cursor:pointer; transition: 0.3s}
+        header .icons i:hover{color: var(--primary-color)}
+
+        nav{ background: #fff; border-bottom: 1px solid #e2e8f0; padding:0 8%; }
+        nav ul{display:flex; gap:10px; list-style:none;}
+        nav a{
+            color: #64748b; padding: 15px 20px; display: block; 
+            font-weight: 500; font-size: 14px; transition: 0.3s;
+        }
+        nav a:hover, nav li.active a{ color: var(--primary-color); border-bottom: 2px solid var(--primary-color)}
+
+        /* --- CONTAINER CHI TIẾT --- */
+        .breadcrumb { padding: 20px 8% 0; font-size: 13px; color: #94a3b8; }
+
+        .container{
+            display:grid; grid-template-columns: 1fr 1.2fr;
+            gap:50px; padding:30px 8%; background:#fff;
+            margin:20px 8% 40px; border-radius:16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        /* Hình ảnh & Slider */
+        .product-gallery { position: sticky; top: 100px; }
+        .main-img-box {
+            border: 1px solid #f1f5f9; border-radius: 12px;
+            overflow: hidden; background: #fff;
+        }
+        .product-img{ width:100%; height:450px; object-fit:contain; transition: 0.3s; }
+        
+        .slider{ display:flex; gap:12px; margin-top:15px; overflow-x:auto; padding-bottom: 5px;}
+        .slider img{
+            width:80px; height: 80px; object-fit: cover;
+            border-radius:8px; cursor:pointer; transition:.3s;
+            border:2px solid #f1f5f9;
+        }
+        .slider img:hover, .slider img.active{ border-color: var(--primary-color); transform: translateY(-2px); }
+
+        /* Thông tin sản phẩm */
+        .product-info h2{ font-size: 26px; line-height: 1.4; color: #1e293b; margin-bottom: 15px; }
+        .price-box {
+            background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 25px;
+        }
+        .price{ color: var(--secondary-color); font-size: 32px; font-weight: 800; }
+        
+        .qty-box{ display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .qty-input {
+            display: flex; align-items: center; border: 1px solid #e2e8f0; border-radius: 8px;
+        }
+        .qty-input input{
+            width:50px; border: none; text-align: center; font-weight: bold; padding: 8px 0;
+        }
+
+        .actions { display: flex; gap: 15px; }
+        .btn{
+            flex: 1; padding: 16px; border-radius: 12px; font-weight: bold;
+            cursor:pointer; border:none; transition:.3s; font-size: 16px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-cart{ background: #ecf3ff; color: var(--primary-color); border: 1px solid var(--primary-color); }
+        .btn-buy{ background: var(--secondary-color); color:#fff; }
+        .btn:hover{ opacity: 0.9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* Mô tả sản phẩm */
+        .desc-section{ margin-top:40px; border-top: 1px solid #f1f5f9; padding-top: 30px; }
+        .desc-section h3{ margin-bottom:15px; font-size: 18px; display: flex; align-items: center; gap: 8px;}
+        .desc-section h3::before { content: ""; width: 4px; height: 18px; background: var(--primary-color); border-radius: 2px; }
+        .desc-content{ line-height:1.8; color: #475569; font-size: 15px; }
+        .desc-content p{ margin-bottom:10px; }
+
+        /* --- SẢN PHẨM LIÊN QUAN --- */
+        .related-title { text-align: center; margin: 40px 0 20px; font-size: 22px; }
+        .products-grid{
+            display:grid; grid-template-columns:repeat(4,1fr);
+            gap:20px; padding:0 8% 60px;
+        }
+        .card{
+            background:#fff; border-radius:12px; padding:15px;
+            text-align:center; box-shadow:0 5px 15px rgba(0,0,0,.03);
+            transition:.3s; border: 1px solid #f1f5f9;
+        }
+        .card:hover{ transform:translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.08); }
+        .card img{ width:100%; height:180px; object-fit:contain; margin-bottom: 10px; }
+        .card p { font-size: 14px; font-weight: 500; margin-bottom: 5px; }
+
+        /* --- FOOTER --- */
+        footer{ background:#1e293b; color:#cbd5e1; padding:60px 8% 30px; }
+        .footer-grid{
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:40px; margin-bottom: 40px;
+        }
+        footer h3{ color: #fff; margin-bottom: 20px; font-size: 18px; }
+        footer p{ margin-bottom: 12px; font-size: 14px; }
+        footer a:hover { color: var(--primary-color); }
+        .social-icons i{ font-size:24px; margin-right:15px; cursor:pointer; transition: 0.3s; }
+        .social-icons i:hover{ color: var(--primary-color); }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media(max-width:950px){
+            .container{grid-template-columns:1fr; margin: 10px 0; border-radius: 0;}
+            .products-grid{grid-template-columns:repeat(2,1fr); padding: 0 4% 40px;}
+            header{ padding: 15px 4%; }
+            .search{ display: none; } /* Thu gọn tìm kiếm trên mobile */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div><i class="fa fa-bolt"></i> Flash Sale đang diễn ra!</div>
+        <div>Hỗ trợ: 04.66.88.00.22</div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="https://down-tx-vn.img.susercontent.com/vn-11134216-820l4-mhlgubgk8em9de_tn.webp">
+            <b>HT STORE</b>
+        </a>
+
+        <div class="search">
+            <input placeholder="Tìm kiếm sản phẩm giá tốt...">
+            <button><i class="fa fa-search"></i></button>
+        </div>
+
+        <div class="icons">
+            <a href="login.html"><i class="fa fa-user-circle"></i></a>
+            <a href="cart.html" style="position: relative;">
+                <i class="fa fa-shopping-bag"></i>
+            </a>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Trang chủ</a></li>
+            <li class="active"><a href="products.html">Sản phẩm</a></li>
+            <li><a href="sale.html">Khuyến mãi</a></li>
+            <li><a href="news.html">Tin tức</a></li>
+            <li><a href="contact.html">Liên hệ</a></li>
+        </ul>
+    </nav>
+
+    <div class="breadcrumb">
+        Trang chủ / Sản phẩm / Đồ gia dụng / Khăn lau đa năng
+    </div>
+
+    <main class="container">
+        <!-- BÊN TRÁI: HÌNH ẢNH -->
+        <div class="product-gallery">
+            <div class="main-img-box">
+                <img id="mainImg" class="product-img" src="https://down-vn.img.susercontent.com/file/ffa4a4c33e07ea6c0b48d581d44590dd.webp">
+            </div>
+
+            <div class="slider">
+                <img class="active" src="https://down-vn.img.susercontent.com/file/ffa4a4c33e07ea6c0b48d581d44590dd.webp" onclick="changeImg(this)">
+                <img src="https://down-vn.img.susercontent.com/file/189553537362e3851f2ee2626a10019e.webp" onclick="changeImg(this)">
+                <img src="https://down-vn.img.susercontent.com/file/000631409e6d456f200f4faa29a79042.webp" onclick="changeImg(this)">
+            </div>
+        </div>
+
+        <!-- BÊN PHẢI: THÔNG TIN & ĐẶT HÀNG -->
+        <div class="product-info">
+            <h2>Combo 15 khăn lau tay nhà bếp 2 mặt siêu thấm hút đa năng</h2>
+            
+            <div style="margin-bottom: 15px; font-size: 14px; color: #64748b;">
+                <span style="color: #fbbf24;"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span>
+                | Đã bán 1.2k+
+            </div>
+
+            <div class="price-box">
+                <div class="price">29.000đ</div>
+                <div style="text-decoration: line-through; color: #94a3b8; font-size: 16px;">45.000đ</div>
+            </div>
+
+            <div class="qty-box">
+                <span>Số lượng:</span>
+                <div class="qty-input">
+                    <button onclick="this.parentNode.querySelector('input').stepDown()" style="padding: 8px 12px; border:none; background:none; cursor:pointer;">-</button>
+                    <input type="number" value="1" min="1">
+                    <button onclick="this.parentNode.querySelector('input').stepUp()" style="padding: 8px 12px; border:none; background:none; cursor:pointer;">+</button>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-cart" onclick="addCart()">
+                    <i class="fa fa-cart-plus"></i> Thêm vào giỏ
+                </button>
+                <button class="btn btn-buy" onclick="buyNow()">
+                    Mua ngay
+                </button>
+            </div>
+
+            <div class="desc-section">
+                <h3>MÔ TẢ SẢN PHẨM</h3>
+                <div class="desc-content">
+                    <p><b>Khăn lau tay nhà bếp 2 mặt siêu thấm hút</b> là trợ thủ đắc lực cho mọi gian bếp hiện đại.</p>
+                    <p><b>ĐẶC ĐIỂM NỔI BẬT:</b></p>
+                    <p>✅ Thấm nước gấp 7 lần trọng lượng vải, khô cực nhanh.</p>
+                    <p>✅ Sợi Microfiber siêu mịn, lau sạch mọi vết dầu mỡ mà không gây trầy xước bề mặt bếp, kính.</p>
+                    <p>✅ Độ bền cao, không ra lông, không phai màu sau nhiều lần giặt.</p>
+                    <p>➡ Kích thước: 16 x 22 cm - Vừa vặn, dễ cầm nắm.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SẢN PHẨM LIÊN QUAN -->
+    <h2 class="related-title">Sản phẩm bạn có thể thích</h2>
+
+    <div class="products-grid">
+        <div class="card">
+            <a href="product-detail.html">
+                <img src="https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mhn4orbl1hjc73.webp">
+                <p>Kệ dán góc nhà tắm</p>
+                <p style="color:var(--secondary-color); font-weight:bold">39.000đ</p>
+            </a>
+        </div>
+        <div class="card">
+            <a href="product-detail.html">
+                <img src="https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mhmrqcjjdkhtce.webp">
+                <p>Móc treo đa năng</p>
+                <p style="color:var(--secondary-color); font-weight:bold">19.000đ</p>
+            </a>
+        </div>
+        <div class="card">
+            <a href="product-detail.html">
+                <img src="https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mhls2u29getke6.webp">
+                <p>Cây lăn bụi quần áo</p>
+                <p style="color:var(--secondary-color); font-weight:bold">15.000đ</p>
+            </a>
+        </div>
+        <div class="card">
+            <a href="product-detail.html">
+                <img src="https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mhkcnbez0tfp57.webp">
+                <p>Viên tẩy bồn cầu</p>
+                <p style="color:var(--secondary-color); font-weight:bold">19.000đ</p>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>CÔNG TY HT</h3>
+                <p>Chuyên cung cấp các sản phẩm gia dụng thông minh và tiện ích cho gia đình bạn.</p>
+                <div class="social-icons">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-tiktok"></i>
+                    <i class="fa fa-store"></i>
+                </div>
+            </div>
+            <div>
+                <h3>Liên kết nhanh</h3>
+                <p><a href="index.html">Trang chủ</a></p>
+                <p><a href="products.html">Sản phẩm</a></p>
+                <p><a href="sale.html">Khuyến mãi</a></p>
+            </div>
+            <div>
+                <h3>Chính sách</h3>
+                <p>Chính sách bảo hành</p>
+                <p>Chính sách đổi trả</p>
+                <p>Vận chuyển toàn quốc</p>
+            </div>
+        </div>
+        <p style="text-align: center; border-top: 1px solid #334155; padding-top: 20px; font-size: 12px;">
+
+        </p>
+    </footer>
+
+    <script>
+        // Thay đổi ảnh chính và active class cho slider
+        function changeImg(el){
+            document.getElementById("mainImg").src = el.src;
+            document.querySelectorAll('.slider img').forEach(img => img.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+
+    <!-- KẾT NỐI GIỎ HÀNG -->
+    <script src="cart.js"></script>
+    <script>
+        function addCart(){
+            let qtyVal = parseInt(document.querySelector(".qty-input input").value);
+            let product = {
+                id: 1,
+                name: "Combo 15 khăn lau tay nhà bếp",
+                price: 29000,
+                img: "https://down-vn.img.susercontent.com/file/ffa4a4c33e07ea6c0b48d581d44590dd.webp",
+                qty: qtyVal
+            };
+            addToCart(product); // Hàm từ cart.js
+            alert("Đã thêm sản phẩm vào giỏ hàng!");
+        }
+
+        function buyNow(){
+            let qtyVal = parseInt(document.querySelector(".qty-input input").value);
+            let product = {
+                id: 1,
+                name: "Combo 15 khăn lau tay nhà bếp",
+                price: 29000,
+                img: "https://down-vn.img.susercontent.com/file/ffa4a4c33e07ea6c0b48d581d44590dd.webp",
+                qty: qtyVal
+            };
+            localStorage.setItem("cart", JSON.stringify([product])); // Ghi đè để mua ngay[cite: 7]
+            window.location.href = "checkout.html";
+        }
+    </script>
+</body>
+</html>

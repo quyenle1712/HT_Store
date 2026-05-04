@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xác nhận đơn hàng | Công ty HT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* --- ĐỒNG BỘ GIAO DIỆN --- */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+body{
+    background:#f5f7fb; /* Màu nền từ index.html */
+    padding:40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- CONTAINER HIỆN ĐẠI --- */
+.box{
+    max-width:800px;
+    width: 100%;
+    background:#fff;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* --- TRẠNG THÁI THÀNH CÔNG --- */
+.success{
+    text-align:center;
+    margin-bottom:35px;
+    padding-bottom: 25px;
+    border-bottom: 1px dashed #eee;
+}
+
+.success i{
+    font-size:70px;
+    color:#22c55e; /* Xanh lá hiện đại */
+    margin-bottom: 15px;
+}
+
+.success h2{
+    font-size: 28px;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.success p { color: #64748b; }
+
+/* --- THÔNG TIN KHÁCH HÀNG --- */
+.info{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:30px;
+    margin-bottom:30px;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.info-block h4 {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.info-block p {
+    margin-bottom: 6px;
+    font-size: 15px;
+    color: #334155;
+}
+
+.info-block b { color: #1e293b; }
+
+/* --- BẢNG SẢN PHẨM --- */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align: left;
+    padding: 12px;
+    color: #64748b;
+    font-size: 13px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+td{
+    padding:15px 12px;
+    border-bottom:1px solid #f1f5f9;
+    color: #334155;
+}
+
+.price-col { text-align: right; }
+.qty-col { text-align: center; }
+
+/* --- TỔNG CHI PHÍ --- */
+.summary {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.total{
+    font-weight:bold;
+    font-size:22px;
+    color:#e53935; /* Màu giá tiền từ index.html */
+}
+
+/* --- NÚT ĐIỀU HƯỚNG --- */
+.actions{
+    text-align:center;
+    margin-top:40px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.home{ background:#0d6efd; color:#fff } /* Màu xanh thương hiệu[cite: 2] */
+.home:hover { background: #084298; transform: translateY(-2px); }
+
+.shop{ background:#f1f5f9; color:#475569 }
+.shop:hover { background: #e2e8f0; transform: translateY(-2px); }
+
+@media(max-width:600px){
+    .info { grid-template-columns: 1fr; }
+    .box { padding: 25px; }
+    .actions { flex-direction: column; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <div class="success">
+        <i class="fa fa-check-circle"></i>
+        <h2>Đặt hàng thành công!</h2>
+        <p>Hệ thống đã ghi nhận đơn hàng của bạn.</p>
+    </div>
+
+    <div id="orderInfo">
+        <!-- Dữ liệu từ Script sẽ đổ vào đây -->
+    </div>
+
+    <div class="actions">
+        <a href="index.html" class="btn home">Quay lại trang chủ</a>
+        <a href="products.html" class="btn shop">Tiếp tục mua sắm</a>
+    </div>
+</div>
+
+<script>
+/* Giữ nguyên logic xử lý dữ liệu từ file gốc[cite: 6] */
+let order = JSON.parse(localStorage.getItem("lastOrder"));
+
+if(!order){
+    document.getElementById("orderInfo").innerHTML = "<div style='text-align:center; padding:20px;'><h3>Không tìm thấy dữ liệu đơn hàng</h3></div>";
+} else {
+    let html = `
+    <div class="info">
+        <div class="info-block">
+            <h4>Thông tin đơn hàng</h4>
+            <p><b>Mã đơn:</b> #${order.id}</p>
+            <p><b>Thời gian:</b> ${order.time}</p>
+            <p><b>Thanh toán:</b> ${order.customer.payment}</p>
+        </div>
+
+        <div class="info-block">
+            <h4>Thông tin giao hàng</h4>
+            <p><b>Khách hàng:</b> ${order.customer.name}</p>
+            <p><b>Số điện thoại:</b> ${order.customer.phone}</p>
+            <p><b>Địa chỉ:</b> ${order.customer.address}</p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th class="qty-col">SL</th>
+                <th class="price-col">Giá</th>
+                <th class="price-col">Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+
+    let total = 0;
+    order.items.forEach(item => {
+        let t = item.price * item.qty;
+        total += t;
+        html += `
+        <tr>
+            <td><strong>${item.name}</strong></td>
+            <td class="qty-col">${item.qty}</td>
+            <td class="price-col">${item.price.toLocaleString()}đ</td>
+            <td class="price-col"><strong>${t.toLocaleString()}đ</strong></td>
+        </tr>
+        `;
+    });
+
+    html += `
+        </tbody>
+    </table>
+
+    <div class="summary">
+        <p style="color: #64748b; font-size: 14px;">Tổng giá trị đơn hàng</p>
+        <div class="total">${total.toLocaleString()}đ</div>
+    </div>
+    `;
+
+    document.getElementById("orderInfo").innerHTML = html;
+}
+</script>
+
+</body>
+</html>

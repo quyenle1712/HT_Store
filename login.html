@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập | Công ty HT</title>
+    <!-- Thêm thư viện icon để trang trông chuyên nghiệp hơn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* Thiết lập cơ bản đồng bộ với index.html */
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+        
+        body{
+            background: linear-gradient(135deg, #f5f7fb 0%, #e3eeff 100%);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            color: #333;
+        }
+
+        .login-card{
+            background:#fff;
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,.08);
+            width:100%;
+            max-width:400px;
+            text-align:center;
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo-area {
+            margin-bottom: 25px;
+        }
+
+        .logo-area b {
+            display: block;
+            font-size: 24px;
+            color: #0d6efd; /* Màu chủ đạo đồng bộ */
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        h3{
+            font-size: 22px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+
+        input{
+            width:100%;
+            padding:12px 15px 12px 45px;
+            border:1px solid #eee;
+            border-radius:12px;
+            background: #f9fbff;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus{
+            border-color: #0d6efd;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+            background:#0d6efd; /* Màu nút đồng bộ index.html[cite: 2] */
+            color:#fff;
+            border:none;
+            border-radius:12px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor:pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover{
+            background:#084298;
+            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+        }
+
+        .back-home {
+            margin-top: 25px;
+            display: block;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .back-home:hover {
+            color: #0d6efd;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <div class="logo-area">
+        <!-- Sử dụng link ảnh logo đã có từ index.html[cite: 2] -->
+        <img src="https://down-tx-vn.img.susercontent.com/vn-11134216-820l4-mhlgubgk8em9de_tn.webp" width="70" style="border-radius: 12px;">
+        <b>CÔNG TY HT</b>
+    </div>
+
+    <h3>Chào mừng quay trở lại</h3>
+
+    <div class="input-group">
+        <i class="fa fa-user"></i>
+        <input id="user" placeholder="Tài khoản">
+    </div>
+
+    <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input id="pass" type="password" placeholder="Mật khẩu">
+    </div>
+
+    <div class="options">
+        <label class="remember-me">
+            <input type="checkbox" style="width: auto;"> Ghi nhớ tôi
+        </label>
+        <a href="#" style="color: #0d6efd; text-decoration: none;">Quên mật khẩu?</a>
+    </div>
+
+    <button onclick="login()">Đăng nhập ngay</button>
+
+    <a href="index.html" class="back-home">
+        <i class="fa fa-arrow-left"></i> Quay lại trang chủ
+    </a>
+</div>
+
+<script>
+function login(){
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    /* Logic xử lý phân quyền giữ nguyên từ file gốc */
+    if(u==="admin" && p==="123"){
+        localStorage.setItem("role","admin");
+        window.location.href="admin.html";
+    }
+    else if(u==="user" && p==="123"){
+        localStorage.setItem("role","user");
+        window.location.href="index.html";
+    }
+    else{
+        // Thay thông báo alert bằng hiệu ứng rung hoặc text đỏ sẽ chuyên nghiệp hơn
+        alert("Sai tài khoản hoặc mật khẩu. Vui lòng kiểm tra lại!");
+    }
+}
+
+// Cho phép nhấn Enter để đăng nhập
+document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        login();
+    }
+});
+</script>
+
+</body>
+</html>

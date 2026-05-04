@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin tức | Công ty HT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* --- ĐỒNG BỘ STYLE HỆ THỐNG --- */
+        :root {
+            --primary: #0d6efd;
+            --dark: #1e293b;
+            --text: #475569;
+            --bg: #f8fafc;
+            --white: #ffffff;
+        }
+
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+        body{background: var(--bg); color: var(--text); line-height: 1.6;}
+        a{text-decoration:none;color:inherit}
+
+        /* --- TOPBAR & HEADER --- */
+        .topbar{
+            background: linear-gradient(90deg, #1e293b, #334155);
+            color:#fff; padding:10px 8%;
+            display:flex; justify-content:space-between; font-size: 13px;
+        }
+
+        header{
+            background: var(--white); padding:15px 8%;
+            display:flex; align-items:center; justify-content:space-between;
+            box-shadow:0 2px 10px rgba(0,0,0,.03);
+            position:sticky; top:0; z-index:99;
+        }
+
+        .logo{display:flex; align-items:center; gap:12px}
+        .logo img{width:50px; border-radius:8px}
+        .logo b{font-size: 20px; color: var(--primary); letter-spacing: 1px}
+
+        .search{flex:1; max-width:400px; margin:0 40px; display:flex; position: relative;}
+        .search input{
+            flex:1; padding:10px 20px; border:1px solid #e2e8f0;
+            border-radius:25px; outline:none; background: #f1f5f9; transition: 0.3s;
+        }
+        .search input:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,110,253,0.1); }
+        .search button{
+            position: absolute; right: 5px; top: 5px; bottom: 5px;
+            padding: 0 15px; background: var(--primary);
+            color: #fff; border: none; border-radius: 20px; cursor: pointer;
+        }
+
+        header .icons a{margin-left:20px; font-size:18px; color: var(--dark); transition: 0.3s}
+        header .icons a:hover{color: var(--primary); transform: scale(1.1);}
+
+        /* --- NAVIGATION --- */
+        nav{ background: var(--white); border-bottom: 1px solid #e2e8f0; padding:0 8%; }
+        nav ul{display:flex; list-style:none;}
+        nav a{
+            color: var(--text); padding: 15px 20px; display: block; 
+            font-weight: 600; font-size: 14px; transition: 0.3s;
+        }
+        nav a:hover, nav li.active a{ color: var(--primary); border-bottom: 2px solid var(--primary)}
+
+        /* --- NEWS LAYOUT --- */
+        .section{padding:50px 8%}
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-header h2 { color: var(--dark); font-size: 32px; margin-bottom: 10px; }
+        .page-header span { display: block; width: 60px; height: 4px; background: var(--primary); margin: 0 auto; border-radius: 2px; }
+
+        .news-container { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+
+        /* News Cards */
+        .main-news { display: flex; flex-direction: column; gap: 30px; }
+        .news-card {
+            background: var(--white); border-radius: 16px; display: flex; overflow: hidden;
+            border: 1px solid #f1f5f9; transition: 0.3s;
+        }
+        .news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.06); }
+        .news-card img { width: 280px; height: 200px; object-fit: cover; }
+        
+        .news-content { padding: 25px; display: flex; flex-direction: column; justify-content: center; }
+        .news-content .date { font-size: 13px; color: #94a3b8; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .news-content h3 { color: var(--dark); font-size: 20px; margin-bottom: 12px; transition: 0.3s; }
+        .news-card:hover h3 { color: var(--primary); }
+        .news-content p { font-size: 14px; color: var(--text); margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .read-more { color: var(--primary); font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+
+        /* Sidebar */
+        .sidebar { display: flex; flex-direction: column; gap: 30px; }
+        .sidebar-box { background: var(--white); padding: 25px; border-radius: 16px; border: 1px solid #f1f5f9; }
+        .sidebar-box h4 { color: var(--dark); margin-bottom: 20px; font-size: 18px; position: relative; padding-left: 15px; }
+        .sidebar-box h4::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--primary); border-radius: 2px; }
+
+        .topic-list a { display: block; padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; transition: 0.3s; font-weight: 500; }
+        .topic-list a:hover { color: var(--primary); padding-left: 8px; }
+        .topic-list a:last-child { border-bottom: none; }
+
+        .side-product { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; }
+        .side-product img { width: 65px; height: 65px; border-radius: 10px; background: #f8fafc; object-fit: contain; }
+        .side-product-info p { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+        .side-product-info span { color: #ef4444; font-weight: 700; font-size: 14px; }
+
+        /* --- FOOTER --- */
+        footer{ background: var(--dark); color: #94a3b8; padding:60px 8% 30px; }
+        .footer-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:40px; }
+        footer h3{ color: #fff; margin-bottom: 25px; font-size: 18px; }
+        footer a { font-size: 14px; margin-bottom: 10px; display: block; transition: 0.3s; }
+        footer a:hover { color: #fff; }
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        .social-icons i { font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .social-icons i:hover { color: var(--primary); transform: translateY(-3px); }
+
+        @media(max-width:1100px){ .news-card img { width: 200px; } }
+        @media(max-width:900px){
+            .news-container { grid-template-columns: 1fr; }
+            .news-card { flex-direction: column; }
+            .news-card img { width: 100%; height: 220px; }
+            .search { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div><i class="fa fa-bullhorn"></i> Cập nhật xu hướng gia dụng mới nhất 2026</div>
+    <div>Hotline: 04.66.88.00.22</div>
+</div>
+
+<header>
+    <div class="logo">
+        <img src="https://down-tx-vn.img.susercontent.com/vn-11134216-820l4-mhlgubgk8em9de_tn.webp" alt="Logo">
+        <b>HT STORE</b>
+    </div>
+
+    <div class="search">
+        <input placeholder="Tìm kiếm bài viết...">
+        <button><i class="fa fa-search"></i></button>
+    </div>
+
+    <div class="icons">
+        <a href="login.html"><i class="fa fa-user-circle"></i></a>
+        <a href="cart.html"><i class="fa fa-shopping-bag"></i></a>
+    </div>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="products.html">Sản phẩm</a></li>
+        <li><a href="sale.html">Khuyến mãi</a></li>
+        <li class="active"><a href="news.html">Tin tức</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+    </ul>
+</nav>
+
+<section class="section">
+    <div class="page-header">
+        <h2>Tin Tức & Đời Sống</h2>
+        <span></span>
+    </div>
+    
+    <div class="news-container">
+        <!-- Cột tin chính -->
+        <div class="main-news">
+            <div class="news-card">
+                <img src="https://cdn.tgdd.vn/2021/11/CookDish/cac-loai-do-gia-dung-hien-dai-cho-can-bep-nha-ban-them-tien-avt-1200x676.jpg" alt="News 1">
+                <div class="news-content">
+                    <span class="date"><i class="far fa-calendar-alt"></i> 05/05/2026</span>
+                    <h3>Bí quyết lựa chọn đồ gia dụng bền đẹp cho căn bếp hiện đại</h3>
+                    <p>Chia sẻ những kinh nghiệm vàng giúp bạn chọn mua được những món đồ gia dụng không chỉ đẹp mà còn tối ưu công năng, tiết kiệm điện năng cho gia đình.</p>
+                    <a href="#" class="read-more">Đọc tiếp <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3" alt="News 2">
+                <div class="news-content">
+                    <span class="date"><i class="far fa-calendar-alt"></i> 02/05/2026</span>
+                    <h3>Thông báo chương trình "Ngày hội mua sắm" cuối tuần này</h3>
+                    <p>Sự kiện bùng nổ với hàng ngàn voucher giảm giá lên đến 50% cho tất cả các mặt hàng gia dụng thông minh tại hệ thống cửa hàng HT Store toàn quốc.</p>
+                    <a href="#" class="read-more">Đọc tiếp <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8" alt="News 3">
+                <div class="news-content">
+                    <span class="date"><i class="far fa-calendar-alt"></i> 28/04/2026</span>
+                    <h3>Hướng dẫn bảo quản đồ nhựa đúng cách để đảm bảo sức khỏe</h3>
+                    <p>Sử dụng đồ nhựa đúng cách không phải ai cũng biết. Hãy cùng tìm hiểu các ký hiệu trên đáy hộp và cách vệ sinh an toàn nhất cho người già và trẻ nhỏ.</p>
+                    <a href="#" class="read-more">Đọc tiếp <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-box">
+                <h4>Chủ đề bài viết</h4>
+                <div class="topic-list">
+                    <a href="#"><i class="fa fa-chevron-right" style="font-size:10px; margin-right:8px;"></i> Mẹo vặt gia đình</a>
+                    <a href="#"><i class="fa fa-chevron-right" style="font-size:10px; margin-right:8px;"></i> Review sản phẩm mới</a>
+                    <a href="#"><i class="fa fa-chevron-right" style="font-size:10px; margin-right:8px;"></i> Khuyến mãi cực sốc</a>
+                    <a href="#"><i class="fa fa-chevron-right" style="font-size:10px; margin-right:8px;"></i> Thông báo từ hệ thống</a>
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <h4>Sản phẩm nổi bật</h4>
+                <div class="side-product">
+                    <img src="https://down-vn.img.susercontent.com/file/ffa4a4c33e07ea6c0b48d581d44590dd.webp">
+                    <div class="side-product-info">
+                        <p>Combo khăn lau Microfiber</p>
+                        <span>29.000đ</span>
+                    </div>
+                </div>
+                <div class="side-product">
+                    <img src="https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mhn4orbl1hjc73.webp">
+                    <div class="side-product-info">
+                        <p>Kệ dán góc tường cao cấp</p>
+                        <span>39.000đ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-grid">
+        <div>
+            <h3>VỀ HT STORE</h3>
+            <p>HT Store là đơn vị cung cấp giải pháp gia dụng thông minh, giúp cuộc sống của bạn trở nên tiện nghi và đơn giản hơn mỗi ngày.</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+        <div>
+            <h3>LIÊN KẾT NHANH</h3>
+            <a href="index.html">Trang chủ</a>
+            <a href="products.html">Sản phẩm nổi bật</a>
+            <a href="sale.html">Chương trình Sale</a>
+            <a href="news.html">Tin tức cộng đồng</a>
+            <a href="contact.html">Liên hệ hỗ trợ</a>
+        </div>
+        <div>
+            <h3>CHĂM SÓC KHÁCH HÀNG</h3>
+            <a href="#">Chính sách đổi trả</a>
+            <a href="#">Vận chuyển & Giao nhận</a>
+            <a href="#">Hướng dẫn mua hàng</a>
+            <a href="#">Bảo mật thông tin</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

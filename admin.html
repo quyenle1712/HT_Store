@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị hệ thống | Công ty HT</title>
+    <!-- Thư viện biểu tượng chuyên nghiệp -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* --- NỀN TẢNG HIỆN ĐẠI --- */
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+        body{display:flex;background:#f0f2f5;min-height:100vh;color:#333}
+
+        /* --- SIDEBAR CHỈN CHU --- */
+        .sidebar{
+            width:260px;
+            background:#1e293b; /* Màu tối chuyên nghiệp */
+            color:#fff;
+            padding:25px 0;
+            height:100vh;
+            position: sticky;
+            top: 0;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar-header {
+            padding: 0 25px 30px;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .sidebar-header h3 {
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: #38bdf8;
+        }
+        .sidebar p {
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: #94a3b8;
+        }
+        .sidebar p:hover {
+            background: #334155;
+            color: #fff;
+        }
+        .sidebar p.active {
+            background: #0d6efd; /* Đồng bộ màu thương hiệu */
+            color: #fff;
+            border-left: 4px solid #fff;
+        }
+        .logout-btn {
+            margin-top: auto;
+            color: #f87171 !important;
+        }
+
+        /* --- VÙNG NỘI DUNG CHÍNH --- */
+        .main{flex:1;padding:30px; overflow-y: auto;}
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header-main h2 { font-size: 24px; color: #1e293b; }
+
+        /* --- THIẾT KẾ BẢNG HIỆN ĐẠI --- */
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        table{
+            width:100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th,td{padding:15px; text-align: left; border-bottom: 1px solid #f1f5f9}
+        th{
+            background:#f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+        tr:hover { background: #f8fafc; }
+
+        /* --- FORM NHẬP LIỆU --- */
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        input{
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+        }
+        input:focus { border-color: #0d6efd; }
+
+        /* --- NÚT BẤM --- */
+        button{
+            padding:10px 20px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-add { background:#0d6efd; color:#fff; }
+        .btn-add:hover { background: #0b5ed7; }
+        .btn-confirm { background:#22c55e; color:#fff; font-size: 13px;}
+        .btn-confirm:hover { background: #16a34a; }
+        .btn-delete { background:#ef4444; color:#fff; font-size: 13px;}
+        .btn-delete:hover { background: #dc2626; }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #f1f5f9;
+        }
+        .status-confirmed { background: #dcfce7; color: #166534; }
+
+        .hidden{display:none}
+    </style>
+</head>
+
+<body>
+
+<script>
+    /* BẢO VỆ ADMIN - Giữ nguyên logic cũ */
+    let role = localStorage.getItem("role");
+    if(role !== "admin"){
+        alert("Bạn không có quyền truy cập!");
+        window.location.href="login.html";
+    }
+</script>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h3><i class="fa fa-user-shield"></i> HT ADMIN</h3>
+    </div>
+    <p id="tab-orders" class="active" onclick="showTab('orders')">
+        <i class="fa fa-shopping-cart"></i> Đơn hàng
+    </p>
+    <p id="tab-products" onclick="showTab('products')">
+        <i class="fa fa-box"></i> Sản phẩm
+    </p>
+    <p class="logout-btn" onclick="logout()">
+        <i class="fa fa-sign-out-alt"></i> Đăng xuất
+    </p>
+</div>
+
+<div class="main">
+
+    <!-- QUẢN LÝ ĐƠN HÀNG -->
+    <div id="orders">
+        <div class="header-main">
+            <h2>Quản lý Đơn hàng</h2>
+        </div>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Liên hệ</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="orderList"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- QUẢN LÝ SẢN PHẨM -->
+    <div id="products" class="hidden">
+        <div class="header-main">
+            <h2>Quản lý Sản phẩm</h2>
+        </div>
+        
+        <div class="card">
+            <div class="form-group">
+                <input id="pName" placeholder="Tên sản phẩm">
+                <input id="pPrice" placeholder="Giá (VD: 25.000đ)">
+                <input id="pImg" placeholder="Link ảnh sản phẩm">
+                <button class="btn-add" onclick="addProduct()">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá bán</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="productList"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+/* ĐIỀU HƯỚNG TAB */
+function showTab(tab){
+    document.getElementById("orders").classList.add("hidden");
+    document.getElementById("products").classList.add("hidden");
+    document.getElementById("tab-orders").classList.remove("active");
+    document.getElementById("tab-products").classList.remove("active");
+    
+    document.getElementById(tab).classList.remove("hidden");
+    document.getElementById("tab-" + tab).classList.add("active");
+}
+
+/* XỬ LÝ ĐƠN HÀNG */
+function loadOrders(){
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    let html="";
+
+    if(orders.length===0){
+        html="<tr><td colspan='6' style='text-align:center; padding:40px; color:#94a3b8;'>Chưa có đơn hàng nào</td></tr>";
+    }else{
+        orders.forEach((o,i)=>{
+            let statusClass = o.status === "Đã xác nhận" ? "status-confirmed" : "";
+            html+=`
+            <tr>
+                <td><strong>#${o.id}</strong></td>
+                <td>${o.customer.name}</td>
+                <td>${o.customer.phone}</td>
+                <td><small>${o.customer.address}</small></td>
+                <td><span class="status-pill ${statusClass}">${o.status}</span></td>
+                <td>
+                    ${o.status !== "Đã xác nhận" ? 
+                    `<button class="btn-confirm" onclick="confirmOrder(${i})"><i class="fa fa-check"></i> Xác nhận</button>` : 
+                    `<i class="fa fa-check-double" style="color:#22c55e"></i>`}
+                </td>
+            </tr>
+            `;
+        });
+    }
+    document.getElementById("orderList").innerHTML=html;
+}
+
+function confirmOrder(i){
+    let orders = JSON.parse(localStorage.getItem("orders"));
+    orders[i].status="Đã xác nhận";
+    localStorage.setItem("orders", JSON.stringify(orders));
+    loadOrders();
+}
+
+/* XỬ LÝ SẢN PHẨM[cite: 5] */
+function getProducts(){
+    return JSON.parse(localStorage.getItem("products"))||[];
+}
+
+function loadProducts(){
+    let data=getProducts();
+    let html="";
+
+    data.forEach((p,i)=>{
+        html+=`
+        <tr>
+            <td><img src="${p.img}" width="50" height="50" style="object-fit:cover; border-radius:8px; border:1px solid #eee;"></td>
+            <td><strong>${p.name}</strong></td>
+            <td style="color:#e53935; font-weight:bold;">${p.price}</td>
+            <td style="text-align: center;">
+                <button class="btn-delete" onclick="deleteProduct(${i})"><i class="fa fa-trash"></i> Xóa</button>
+            </td>
+        </tr>
+        `;
+    });
+    document.getElementById("productList").innerHTML=html;
+}
+
+function addProduct(){
+    let name=document.getElementById("pName").value;
+    let price=document.getElementById("pPrice").value;
+    let img=document.getElementById("pImg").value;
+
+    if(!name||!price||!img){
+        alert("Vui lòng nhập đầy đủ thông tin sản phẩm!");
+        return;
+    }
+
+    let data=getProducts();
+    data.push({name,price,img});
+    localStorage.setItem("products",JSON.stringify(data));
+    
+    // Reset form
+    document.getElementById("pName").value = "";
+    document.getElementById("pPrice").value = "";
+    document.getElementById("pImg").value = "";
+    
+    loadProducts();
+}
+
+function deleteProduct(i){
+    if(confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")){
+        let data=getProducts();
+        data.splice(i,1);
+        localStorage.setItem("products",JSON.stringify(data));
+        loadProducts();
+    }
+}
+
+/* ĐĂNG XUẤT[cite: 5] */
+function logout(){
+    if(confirm("Xác nhận đăng xuất khỏi hệ thống quản trị?")){
+        localStorage.removeItem("role");
+        window.location.href="login.html";
+    }
+}
+
+/* KHỞI TẠO[cite: 5] */
+loadOrders();
+loadProducts();
+
+</script>
+
+</body>
+</html>

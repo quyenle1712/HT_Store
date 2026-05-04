@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giỏ hàng - Công ty HT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#f5f7fb}
+a{text-decoration:none;color:inherit}
+
+/* TOPBAR */
+.topbar{
+background:linear-gradient(90deg,#4facfe,#00c6ff);
+color:#fff;padding:10px 8%;
+display:flex;justify-content:space-between}
+
+/* HEADER */
+header{
+background:#fff;padding:15px 8%;
+display:flex;align-items:center;justify-content:space-between;
+box-shadow:0 4px 10px rgba(0,0,0,.05);
+position:sticky;top:0;z-index:99;
+}
+
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{width:60px;border-radius:10px}
+
+.search{flex:1;max-width:450px;margin:0 30px;display:flex}
+.search input{flex:1;padding:12px;border:1px solid #ddd;border-radius:25px 0 0 25px}
+.search button{padding:12px;background:#0d6efd;color:#fff;border:none;border-radius:0 25px 25px 0}
+
+/* NAV */
+nav{background:#0d6efd;padding:14px 8%}
+nav ul{display:flex;gap:30px;list-style:none;font-weight:bold}
+nav a{color:#fff;padding:8px 15px;border-radius:20px}
+nav a:hover{background:#fff;color:#0d6efd}
+
+/* MAIN */
+.container{
+padding:40px 8%;
+}
+
+h2{margin-bottom:20px}
+
+/* TABLE */
+table{
+width:100%;
+background:#fff;
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+th,td{
+padding:15px;
+text-align:center;
+border-bottom:1px solid #eee;
+}
+
+th{background:#f1f5ff}
+
+td img{
+width:70px;
+height:70px;
+object-fit:contain;
+}
+
+input[type="number"]{
+width:60px;
+padding:5px;
+}
+
+/* BUTTON */
+.btn{
+padding:6px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.btn-remove{
+background:#ff4d4d;
+color:#fff;
+}
+
+.btn-remove:hover{opacity:.8}
+
+/* TOTAL */
+.summary{
+margin-top:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.total{
+font-size:20px;
+font-weight:bold;
+color:#e53935;
+}
+
+.checkout-btn{
+padding:12px 25px;
+background:#ff3d3d;
+color:#fff;
+border:none;
+border-radius:25px;
+cursor:pointer;
+}
+
+.checkout-btn:hover{opacity:.9}
+
+/* EMPTY */
+.empty{
+text-align:center;
+padding:40px;
+background:#fff;
+border-radius:15px;
+}
+
+/* FOOTER */
+footer{
+background:#222;color:#fff;
+padding:40px 8%;
+margin-top:40px;
+}
+.footer-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px}
+
+footer i{margin-right:10px}
+
+/* MOBILE */
+@media(max-width:900px){
+.summary{flex-direction:column;gap:15px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<div>🔥 Flash Sale mỗi ngày</div>
+<div>Hotline: 04.66.88.00.22</div>
+</div>
+
+<header>
+<div class="logo">
+<img src="https://down-tx-vn.img.susercontent.com/vn-11134216-820l4-mhlgubgk8em9de_tn.webp">
+<b>CÔNG TY HT</b>
+</div>
+
+<div class="search">
+<input placeholder="Tìm sản phẩm...">
+<button><i class="fa fa-search"></i></button>
+</div>
+
+<div>
+<a href="login.html"><i class="fa fa-user"></i></a>
+<a href="cart.html"><i class="fa fa-cart-shopping"></i></a>
+</div>
+</header>
+
+<nav>
+<ul>
+<li><a href="index.html">Trang chủ</a></li>
+<li><a href="products.html">Sản phẩm</a></li>
+<li><a href="sale.html">Khuyến mãi</a></li>
+<li><a href="news.html">Tin tức</a></li>
+<li><a href="contact.html">Liên hệ</a></li>
+</ul>
+</nav>
+
+<div class="container">
+
+<h2>🛒 Giỏ hàng của bạn</h2>
+
+<div id="cartContent"></div>
+
+</div>
+
+
+<script src="cart.js"></script>
+
+<script>
+function renderCart(){
+let cart = getCart();
+let container = document.getElementById("cartContent");
+
+if(cart.length === 0){
+container.innerHTML = `
+<div class="empty">
+<h3>Giỏ hàng trống 🛒</h3>
+<p><a href="products.html">Đi mua sắm ngay</a></p>
+</div>`;
+return;
+}
+
+let html = `
+<table>
+<thead>
+<tr>
+<th>Ảnh</th>
+<th>Tên</th>
+<th>Giá</th>
+<th>Số lượng</th>
+<th>Tổng</th>
+<th>Xóa</th>
+</tr>
+</thead>
+<tbody>
+`;
+
+let total = 0;
+
+cart.forEach(item=>{
+let itemTotal = item.price * item.qty;
+total += itemTotal;
+
+html += `
+<tr>
+<td><img src="${item.img}"></td>
+<td>${item.name}</td>
+<td>${item.price.toLocaleString()}đ</td>
+<td>
+<input type="number" value="${item.qty}" min="1"
+onchange="updateQty(${item.id}, this.value)">
+</td>
+<td>${itemTotal.toLocaleString()}đ</td>
+<td>
+<button class="btn btn-remove" onclick="removeItem(${item.id})">X</button>
+</td>
+</tr>
+`;
+});
+
+html += `
+</tbody>
+</table>
+
+<div class="summary">
+<div class="total">Tổng: ${total.toLocaleString()}đ</div>
+<a href="checkout.html">
+<button class="checkout-btn">Thanh toán</button>
+</a>
+</div>
+`;
+
+container.innerHTML = html;
+}
+
+renderCart();
+</script>
+
+</body>
+</html>
